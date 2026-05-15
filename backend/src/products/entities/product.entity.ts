@@ -14,8 +14,8 @@ import { OrderItem } from '../../orders/entities/order-item.entity';
 
 @Entity('products')
 export class Product {
-    @PrimaryGeneratedColumn('uuid')
-    id!: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column()
     pname!: string;

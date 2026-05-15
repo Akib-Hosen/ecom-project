@@ -11,8 +11,8 @@ import { User } from '../../users/entities/user.entity';
 
 @Entity('order_items')
 export class OrderItem {
-    @PrimaryGeneratedColumn('uuid')
-    id!: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @ManyToOne(() => Order, (order) => order.items, { onDelete: 'CASCADE' })
     order!: Order;

@@ -13,8 +13,8 @@ import { OrderItem } from './order-item.entity';
 
 @Entity('orders')
 export class Order {
-    @PrimaryGeneratedColumn('uuid')
-    id!: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @ManyToOne(() => User, (user) => user.orders)
     customer!: User;
