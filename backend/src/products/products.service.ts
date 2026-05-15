@@ -51,7 +51,7 @@ export class ProductsService {
         }
 
         if (query.search) {
-        where.title = ILike(`%${query.search}%`);
+        where.pname = ILike(`%${query.search}%`);
         }
 
         const [products, total] = await this.productRepository.findAndCount({
