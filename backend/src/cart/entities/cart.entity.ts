@@ -12,7 +12,7 @@ import { CartItem } from './cart-item.entity';
 
 @Entity('carts')
 export class Cart {
-    @PrimaryGeneratedColumn('uid')
+    @PrimaryGeneratedColumn('uuid')
     id!: number;
 
     @OneToOne(() => User, (user) => user.cart)

@@ -1,4 +1,4 @@
-import{
+import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
@@ -11,8 +11,8 @@ import { User } from '../../users/entities/user.entity';
 
 @Entity('order_items')
 export class OrderItem {
-    @PrimaryGeneratedColumn('uid')
-    id!: number;
+    @PrimaryGeneratedColumn('uuid')
+    id!: string;
 
     @ManyToOne(() => Order, (order) => order.items, { onDelete: 'CASCADE' })
     order!: Order;
@@ -20,7 +20,7 @@ export class OrderItem {
     @ManyToOne(() => Product, (product) => product.orderItems)
     product!: Product;
 
-    @ManyToOne(() => User, (user) => user.orderItems)
+    @ManyToOne(() => User)
     seller!: User;
 
     @Column()

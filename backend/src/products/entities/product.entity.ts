@@ -1,4 +1,3 @@
-import { User } from './../../users/entities/user.entity';
 import{
     Entity,
     PrimaryGeneratedColumn,
@@ -15,7 +14,7 @@ import { OrderItem } from '../../orders/entities/order-item.entity';
 
 @Entity('products')
 export class Product {
-    @PrimaryGeneratedColumn('uid')
+    @PrimaryGeneratedColumn('uuid')
     id!: number;
 
     @Column()

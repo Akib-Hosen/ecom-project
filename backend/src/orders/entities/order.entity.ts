@@ -13,7 +13,7 @@ import { OrderItem } from './order-item.entity';
 
 @Entity('orders')
 export class Order {
-    @PrimaryGeneratedColumn('uid')
+    @PrimaryGeneratedColumn('uuid')
     id!: number;
 
     @ManyToOne(() => User, (user) => user.orders)
@@ -29,7 +29,7 @@ export class Order {
     })
     status!: OrderStatus;
 
-    @Column('test')
+    @Column('text')
     shippingAddress!: string;
 
     @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
