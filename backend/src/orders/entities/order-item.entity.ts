@@ -20,9 +20,6 @@ export class OrderItem {
     @ManyToOne(() => Product, (product) => product.orderItems)
     product!: Product;
 
-    @ManyToOne(() => User)
-    seller!: User;
-
     @Column()
     quantity!: number;
 

@@ -1,12 +1,4 @@
-import{
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    CreateDateColumn,
-    UpdateDateColumn,
-    ManyToOne,
-    OneToMany
-} from 'typeorm';
+import{ Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { OrderStatus } from '../enums/order-status.enum';   
 import { OrderItem } from './order-item.entity';
@@ -31,6 +23,9 @@ export class Order {
 
     @Column('text')
     shippingAddress!: string;
+
+    @Column()
+    phoneNumber!: string;
 
     @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
     items!: OrderItem[];

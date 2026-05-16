@@ -4,4 +4,8 @@ export class CreateOrderDto {
     @IsNotEmpty()
     @IsString()
     shippingAddress!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    phoneNumber!: string;
 }

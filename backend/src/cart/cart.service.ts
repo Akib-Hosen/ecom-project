@@ -120,7 +120,7 @@ export class CartService {
         await this.cartItemRepository.save(cartItem);
 
         return this.getCart(user);
-  }
+}
 
     async removeItem(id: number, user: User) {
         if (user.role !== UserRole.CUSTOMER) {
