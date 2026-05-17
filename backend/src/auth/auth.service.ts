@@ -6,17 +6,19 @@ import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
         private jwtService: JwtService,
-    ) {}
+    ) { }
 
-    async register(registerDto: RegisterDto){
+    async register(registerDto: RegisterDto) {
         const existingUser = await this.usersRepository.findOne({ where: { email: registerDto.email } });
-        if(existingUser){
+        if (existingUser) {
             throw new BadRequestException('Email already in use');
         }
 
@@ -33,7 +35,7 @@ export class AuthService {
         };
     }
 
-    async login(loginDto: LoginDto){
+    async login(loginDto: LoginDto) {
         const user = await this.usersRepository.findOne({ where: { email: loginDto.email } });
         if (!user) {
             throw new UnauthorizedException('Invalid email or password');
@@ -44,14 +46,48 @@ export class AuthService {
             throw new UnauthorizedException('Invalid email or password');
         }
 
-        const payload = {sub: user.id, email: user.email, role: user.role};
+        const payload = { sub: user.id, email: user.email, role: user.role };
 
         const accessToken = this.jwtService.sign(payload);
         const { password, ...result } = user;
 
-        return{
+        return {
             accessToken,
             user: result,
+        };
+    }
+
+    async verifyEmail(verifyEmailDto: VerifyEmailDto) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                email: verifyEmailDto.email,
+            },
+        });
+
+        if (!user) {
+            throw new UnauthorizedException('Email not found');
+        }
+
+        return {
+            message: 'Email verified successfully',
+        };
+    }
+
+    async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+        const user = await this.usersRepository.findOne({
+            where: { email: forgotPasswordDto.email },
+        });
+
+        if (!user) {
+            throw new UnauthorizedException('Email not found');
+        }
+
+        user.password = await bcrypt.hash(forgotPasswordDto.newPassword, 10);
+
+        await this.usersRepository.save(user);
+
+        return {
+            message: 'Password updated successfully',
         };
     }
 }
