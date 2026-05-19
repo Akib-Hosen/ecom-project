@@ -7,11 +7,9 @@ import api from "@/lib/api";
 
 export default function RegisterPage() {
     const router = useRouter();
-
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
@@ -19,7 +17,6 @@ export default function RegisterPage() {
         e.preventDefault();
         setError("");
         setSuccess("");
-
         try {
             await api.post("/auth/register", {
                 name,
@@ -27,9 +24,7 @@ export default function RegisterPage() {
                 password,
                 role: "customer",
             });
-
             setSuccess("Account created successfully");
-
             setTimeout(() => {
                 router.push("/login");
             }, 1000);
@@ -41,11 +36,9 @@ export default function RegisterPage() {
     return (
         <div className="flex items-center justify-center px-4 py-8">
             <div className="w-full max-w-100 bg-white rounded-3xl shadow-2xl p-8">
-                
                 <div className="flex justify-center mb-6">
                     <img src="/logo.png" alt="Logo" className="h-12 object-contain" />
                 </div>
-
                 <h1 className="text-3xl text-center font-bold text-black mb-6">Sign Up</h1>
 
                 {error && <div className="p-3 mb-4 text-sm text-red-600 bg-red-100 rounded-lg">{error}</div>}

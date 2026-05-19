@@ -29,7 +29,6 @@ export default function SellerDashboardPage() {
     }, []);
 
     const pendingOrders = orders.filter((order) => order.status === "pending");
-
     const totalSales = orders.reduce((sum, order) => {
         return sum + Number(order.totalAmount);
     }, 0);

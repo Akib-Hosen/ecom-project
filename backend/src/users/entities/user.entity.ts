@@ -1,12 +1,4 @@
-import{
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    OneToOne,
-    OneToMany,
-} from 'typeorm';
+import{ Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany,} from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { UserRole } from '../enums/user-role.enum';
 import { Cart } from '../../cart/entities/cart.entity';

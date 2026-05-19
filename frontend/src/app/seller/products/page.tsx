@@ -9,7 +9,6 @@ export default function SellerProductsPage() {
     const [categories, setCategories] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingProduct, setEditingProduct] = useState<any>(null);
-
     const [pname, setPname] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
@@ -59,10 +58,8 @@ export default function SellerProductsPage() {
         if (!imageFile) {
             return imageUrl;
         }
-
         const formData = new FormData();
         formData.append("file", imageFile);
-
         const response = await api.post("/products/upload", formData);
         return response.data.imageUrl;
     };
@@ -72,7 +69,6 @@ export default function SellerProductsPage() {
 
         try {
             const uploadedImageUrl = await uploadImage();
-
             const productData = {
                 pname,
                 description,
@@ -89,7 +85,6 @@ export default function SellerProductsPage() {
                 await api.post("/products", productData);
                 alert("Product added successfully");
             }
-
             resetForm();
             getProducts();
         } catch (error: any) {
@@ -114,7 +109,6 @@ export default function SellerProductsPage() {
         if (!confirmDelete) {
             return;
         }
-
         try {
             await api.delete(`/products/${id}`);
             alert("Product deleted successfully");

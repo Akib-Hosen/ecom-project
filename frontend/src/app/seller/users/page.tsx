@@ -8,7 +8,6 @@ export default function SellerUsersPage() {
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingUser, setEditingUser] = useState<any>(null);
-
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("customer");
@@ -34,7 +33,6 @@ export default function SellerUsersPage() {
         setName(user.name);
         setEmail(user.email);
         setRole(user.role);
-        // Scroll to top on mobile so they see the form
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -47,18 +45,15 @@ export default function SellerUsersPage() {
 
     const updateUser = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-
         if (!editingUser) {
             return;
         }
-
         try {
             await api.patch(`/users/${editingUser.id}`, {
                 name,
                 email,
                 role,
             });
-
             alert("User updated successfully");
             cancelEdit();
             getUsers();

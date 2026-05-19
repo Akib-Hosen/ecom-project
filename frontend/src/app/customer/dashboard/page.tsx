@@ -8,13 +8,10 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function CustomerDashboardPage() {
     const { user } = useAuth();
-
     const [name, setName] = useState(user?.name || "");
     const [email, setEmail] = useState(user?.email || "");
-
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
-
     const [profileMessage, setProfileMessage] = useState("");
     const [passwordMessage, setPasswordMessage] = useState("");
 

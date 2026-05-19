@@ -11,6 +11,8 @@ import { OrderStatus } from './enums/order-status.enum';
 import { OrderItem } from './entities/order-item.entity';
 import { Product } from 'src/products/entities/product.entity';
 import { CartItem } from 'src/cart/entities/cart-item.entity';
+import { PaymentMethod } from './enums/payment-method.enum';
+import { PaymentStatus } from './enums/payment-status.enum';
 
 @Injectable()
 export class OrdersService {
@@ -19,22 +21,22 @@ export class OrdersService {
         private orderRepository: Repository<Order>,
 
         private datasource: DataSource,
-    ) {}
+    ) { }
 
-    async placeOrder(createOrderDto: CreateOrderDto, user: User){
-        if(user.role !== UserRole.CUSTOMER){
+    async placeOrder(createOrderDto: CreateOrderDto, user: User) {
+        if (user.role !== UserRole.CUSTOMER) {
             throw new ForbiddenException('Only customers can place orders');
         }
 
         return this.datasource.transaction(async manager => {
-            const cart = await manager.findOne(Cart, { where: { user: {id: user.id} }, relations: ['items', 'items.product'] });
+            const cart = await manager.findOne(Cart, { where: { user: { id: user.id } }, relations: ['items', 'items.product'] });
 
-            if(!cart || cart.items.length === 0){
+            if (!cart || cart.items.length === 0) {
                 throw new BadRequestException('Cart is empty');
             }
 
-            for(const item of cart.items){
-                if(item.quantity > item.product.stock){
+            for (const item of cart.items) {
+                if (item.quantity > item.product.stock) {
                     throw new BadRequestException(`Product is out of stock`);
                 }
             }
@@ -49,10 +51,16 @@ export class OrdersService {
                 phoneNumber: createOrderDto.phoneNumber,
                 totalAmount,
                 status: OrderStatus.PENDING,
+                paymentMethod: createOrderDto.paymentMethod,
+                paymentStatus:
+                    createOrderDto.paymentMethod === PaymentMethod.DIGITAL_PAYMENT
+                        ? PaymentStatus.PAID
+                        : PaymentStatus.UNPAID,
+                cardLast4: createOrderDto.cardLast4,
             });
 
             const savedOrder = await manager.save(Order, order);
-            for(const item of cart.items){
+            for (const item of cart.items) {
                 const orderItem = manager.create(OrderItem, {
                     order: savedOrder,
                     product: item.product,
@@ -65,8 +73,8 @@ export class OrdersService {
                 await manager.save(Product, item.product);
             }
 
-            await manager.delete(CartItem, {cart: {id: cart.id}});
-            return{
+            await manager.delete(CartItem, { cart: { id: cart.id } });
+            return {
                 message: 'Order placed successfully',
                 orderId: savedOrder.id,
                 totalAmount,
@@ -75,8 +83,8 @@ export class OrdersService {
     }
 
 
-    async myOrders(user: User){
-        if(user.role !== UserRole.CUSTOMER){
+    async myOrders(user: User) {
+        if (user.role !== UserRole.CUSTOMER) {
             throw new ForbiddenException('Only customers can view their orders');
         }
         return this.orderRepository.find({
@@ -86,8 +94,8 @@ export class OrdersService {
         });
     }
 
-    async allOrders(user: User){
-        if(user.role !== UserRole.SELLER){
+    async allOrders(user: User) {
+        if (user.role !== UserRole.SELLER) {
             throw new ForbiddenException('Only sellers can view all orders');
         }
         return this.orderRepository.find({
@@ -100,14 +108,26 @@ export class OrdersService {
         id: number,
         updateOrderStatusDto: UpdateOrderStatusDto,
         user: User,
-    ){
-        if(user.role !== UserRole.SELLER){
+    ) {
+        if (user.role !== UserRole.SELLER) {
             throw new ForbiddenException('Only sellers can update order status');
         }
 
         const order = await this.orderRepository.findOne({ where: { id } });
-        if(!order){
+        if (!order) {
             throw new NotFoundException('Order not found');
+        }
+
+        if (updateOrderStatusDto.status === OrderStatus.CANCELLED) {
+            if (
+                order.status === OrderStatus.DELIVERED ||
+                order.status === OrderStatus.CANCELLED
+            ) {
+                throw new BadRequestException('This order cannot be cancelled');
+            }
+
+            order.status = OrderStatus.CANCELLED;
+            return this.orderRepository.save(order);
         }
 
         const allowedFlow = {
@@ -115,10 +135,13 @@ export class OrdersService {
             [OrderStatus.PROCESSING]: OrderStatus.SHIPPED,
             [OrderStatus.SHIPPED]: OrderStatus.DELIVERED,
         };
+
         const nextStatus = allowedFlow[order.status];
-        if(updateOrderStatusDto.status !== nextStatus){
+
+        if (updateOrderStatusDto.status !== nextStatus) {
             throw new BadRequestException('Invalid order status update');
         }
+
         order.status = updateOrderStatusDto.status;
         return this.orderRepository.save(order);
     }

@@ -6,15 +6,12 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
     const { login } = useAuth();
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
     const handleLogin = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         setError("");
-
         try {
             await login(email, password);
         } catch (error) {
@@ -24,8 +21,7 @@ export default function LoginPage() {
 
     return (
         <div className="flex items-center justify-center px-4 py-8">
-            <div className="w-full max-w-100 bg-white rounded-3xl shadow-2xl p-8">
-                
+            <div className="w-full max-w-100 bg-white rounded-3xl shadow-2xl p-8">              
                 <div className="flex justify-center mb-6">
                     <img src="/logo.png" alt="Logo" className="h-12 object-contain" />
                 </div>

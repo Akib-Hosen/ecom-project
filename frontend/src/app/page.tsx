@@ -56,7 +56,7 @@ export default function HomePage() {
             <Link
               href={`/products?category=${category.name}`}
               key={category.id}
-              className="card bg-base-100 shadow hover:shadow-lg transition duration-300"
+              className="card bg-base-100 border border-gray-100 shadow hover:shadow-xl hover:border-[#0047FF] transition-all duration-300"
             >
               <div className="card-body items-center text-center">
                 <h3 className="card-title">

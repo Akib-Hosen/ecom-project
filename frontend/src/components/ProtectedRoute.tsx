@@ -14,19 +14,16 @@ export default function ProtectedRoute({
     allowedRole,
 }: ProtectedRouteProps) {
     const router = useRouter();
-
     const { user, isAuthenticated, loading } = useAuth();
 
     useEffect(() => {
         if (loading) {
             return;
         }
-
         if (!isAuthenticated) {
             router.push("/login");
             return;
         }
-
         if (user?.role !== allowedRole) {
             if (user?.role === "seller") {
                 router.push("/seller/dashboard");

@@ -8,7 +8,6 @@ import api from "@/lib/api";
 export default function ProductsPage() {
     const searchParams = useSearchParams();
     const categoryFromUrl = searchParams.get("category");
-
     const [products, setProducts] = useState<any[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [search, setSearch] = useState("");
@@ -18,29 +17,23 @@ export default function ProductsPage() {
     const getProducts = async () => {
         try {
             setLoading(true);
-
             let url = "/products";
-
             if (selectedCategory) {
                 url = `/products?category=${selectedCategory}`;
             }
-
             if (search) {
                 url = `/products?search=${search}`;
             }
 
             const response = await api.get(url);
             const productList = response.data.data || [];
-
             setProducts(productList);
-
             const allResponse = await api.get("/products");
             const allProducts = allResponse.data.data || [];
 
             const uniqueCategories: string[] = Array.from(
                 new Set(allProducts.map((product: any) => product.category))
             );
-
             setCategories(uniqueCategories);
         } catch (error) {
             console.log(error);
@@ -65,7 +58,6 @@ export default function ProductsPage() {
 
     return (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                 <div>
                     <h1 className="text-4xl font-extrabold text-gray-900">Products</h1>
