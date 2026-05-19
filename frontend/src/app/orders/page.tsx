@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState<any[]>([]);
@@ -56,77 +57,79 @@ export default function OrdersPage() {
     }
 
     return (
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">
-                My Orders
-            </h1>
+        <ProtectedRoute allowedRole="customer">
+            <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">
+                    My Orders
+                </h1>
 
-            <div className="space-y-6">
-                {orders.map((order) => (
-                    <div
-                        key={order.id}
-                        className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden p-6"
-                    >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-gray-100">
-                            <div>
-                                <h2 className="text-lg font-bold text-gray-900">
-                                    Order #{order.id}
-                                </h2>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    {new Date(order.createdAt).toLocaleDateString(undefined, { 
-                                        year: 'numeric', month: 'short', day: 'numeric' 
-                                    })}
-                                </p>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <span className="font-bold text-lg text-gray-900">
-                                    ৳ {order.totalAmount}
-                                </span>
-                                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${getStatusStyles(order.status)}`}>
-                                    {order.status}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4 mb-6 pb-6 border-b border-gray-100">
-                            {order.items.map((item: any) => (
-                                <div key={item.id} className="flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <img
-                                            src={item.product.imageUrl}
-                                            alt={item.product.pname}
-                                            className="w-12 h-12 object-contain bg-gray-50 rounded-lg p-1 border border-gray-100"
-                                        />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">
-                                                {item.product.pname}
-                                            </p>
-                                            <p className="text-sm text-gray-500">
-                                                Qty: {item.quantity}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <p className="font-semibold text-gray-900">
-                                        ৳ {item.price}
+                <div className="space-y-6">
+                    {orders.map((order) => (
+                        <div
+                            key={order.id}
+                            className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden p-6"
+                        >
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-gray-100">
+                                <div>
+                                    <h2 className="text-lg font-bold text-gray-900">
+                                        Order #{order.id}
+                                    </h2>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        {new Date(order.createdAt).toLocaleDateString(undefined, {
+                                            year: 'numeric', month: 'short', day: 'numeric'
+                                        })}
                                     </p>
                                 </div>
-                            ))}
-                        </div>
 
-                        <div className="text-sm text-gray-600 flex flex-col sm:flex-row gap-6">
-                            <div>
-                                <span className="block font-semibold text-gray-900 mb-1">Shipping Address</span>
-                                {order.shippingAddress}
+                                <div className="flex items-center gap-4">
+                                    <span className="font-bold text-lg text-gray-900">
+                                        ৳ {order.totalAmount}
+                                    </span>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${getStatusStyles(order.status)}`}>
+                                        {order.status}
+                                    </span>
+                                </div>
                             </div>
-                            <div>
-                                <span className="block font-semibold text-gray-900 mb-1">Phone Number</span>
-                                {order.phoneNumber || "N/A"}
+
+                            <div className="space-y-4 mb-6 pb-6 border-b border-gray-100">
+                                {order.items.map((item: any) => (
+                                    <div key={item.id} className="flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <img
+                                                src={item.product.imageUrl}
+                                                alt={item.product.pname}
+                                                className="w-12 h-12 object-contain bg-gray-50 rounded-lg p-1 border border-gray-100"
+                                            />
+                                            <div>
+                                                <p className="font-semibold text-gray-900">
+                                                    {item.product.pname}
+                                                </p>
+                                                <p className="text-sm text-gray-500">
+                                                    Qty: {item.quantity}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <p className="font-semibold text-gray-900">
+                                            ৳ {item.price}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="text-sm text-gray-600 flex flex-col sm:flex-row gap-6">
+                                <div>
+                                    <span className="block font-semibold text-gray-900 mb-1">Shipping Address</span>
+                                    {order.shippingAddress}
+                                </div>
+                                <div>
+                                    <span className="block font-semibold text-gray-900 mb-1">Phone Number</span>
+                                    {order.phoneNumber || "N/A"}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-        </main>
+                    ))}
+                </div>
+            </main>
+        </ProtectedRoute>
     );
 }

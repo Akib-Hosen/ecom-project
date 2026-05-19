@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function CartPage() {
     const [cart, setCart] = useState<any>(null);
@@ -82,111 +83,113 @@ export default function CartPage() {
     const finalTotal = Number(cart.total) + shippingFee;
 
     return (
-        <main className="px-18 py-10">
-            <h1 className="text-3xl font-bold mb-8">
-                My Cart
-            </h1>
+        <ProtectedRoute allowedRole="customer">
+            <main className="px-18 py-10">
+                <h1 className="text-3xl font-bold mb-8">
+                    My Cart
+                </h1>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-4">
-                    {cart.items.map((item: any) => (
-                        <div
-                            key={item.id}
-                            className="card bg-base-100 shadow"
-                        >
-                            <div className="card-body">
-                                <div className="flex gap-4">
-                                    <img
-                                        src={item.product.imageUrl}
-                                        alt={item.product.pname}
-                                        className="w-28 h-28 object-cover rounded-lg"
-                                    />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2 space-y-4">
+                        {cart.items.map((item: any) => (
+                            <div
+                                key={item.id}
+                                className="card bg-base-100 shadow"
+                            >
+                                <div className="card-body">
+                                    <div className="flex gap-4">
+                                        <img
+                                            src={item.product.imageUrl}
+                                            alt={item.product.pname}
+                                            className="w-28 h-28 object-cover rounded-lg"
+                                        />
 
-                                    <div className="flex-1">
-                                        <h2 className="text-xl font-bold">
-                                            {item.product.pname}
-                                        </h2>
+                                        <div className="flex-1">
+                                            <h2 className="text-xl font-bold">
+                                                {item.product.pname}
+                                            </h2>
 
-                                        <p className="opacity-70">
-                                            ৳ {item.product.price}
-                                        </p>
+                                            <p className="opacity-70">
+                                                ৳ {item.product.price}
+                                            </p>
 
-                                        <div className="flex items-center gap-3 mt-4">
-                                            <button
-                                                onClick={() =>
-                                                    updateQuantity(item.id, item.quantity - 1)
-                                                }
-                                                className="btn btn-sm"
-                                            >
-                                                -
-                                            </button>
+                                            <div className="flex items-center gap-3 mt-4">
+                                                <button
+                                                    onClick={() =>
+                                                        updateQuantity(item.id, item.quantity - 1)
+                                                    }
+                                                    className="btn btn-sm"
+                                                >
+                                                    -
+                                                </button>
 
-                                            <span className="font-semibold">
-                                                {item.quantity}
-                                            </span>
+                                                <span className="font-semibold">
+                                                    {item.quantity}
+                                                </span>
 
-                                            <button
-                                                onClick={() =>
-                                                    updateQuantity(item.id, item.quantity + 1)
-                                                }
-                                                className="btn btn-sm"
-                                            >
-                                                +
-                                            </button>
+                                                <button
+                                                    onClick={() =>
+                                                        updateQuantity(item.id, item.quantity + 1)
+                                                    }
+                                                    className="btn btn-sm"
+                                                >
+                                                    +
+                                                </button>
 
-                                            <button
-                                                onClick={() => removeItem(item.id)}
-                                                className="btn btn-error btn-sm ml-4"
-                                            >
-                                                Remove
-                                            </button>
+                                                <button
+                                                    onClick={() => removeItem(item.id)}
+                                                    className="btn btn-error btn-sm ml-4"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="font-bold">
-                                        ৳ {Number(item.product.price) * item.quantity}
+                                        <div className="font-bold">
+                                            ৳ {Number(item.product.price) * item.quantity}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+
+                    <div className="card bg-base-100 shadow h-fit">
+                        <div className="card-body">
+                            <h2 className="card-title">
+                                Order Summary
+                            </h2>
+
+                            <div className="flex justify-between mt-4">
+                                <span>Subtotal</span>
+                                <span className="font-bold">
+                                    ৳ {cart.total}
+                                </span>
+                            </div>
+
+                            <div className="flex justify-between mt-2">
+                                <span>Shipping</span>
+                                <span className="font-bold">
+                                    {shippingFee === 0 ? "Free" : `৳ ${shippingFee}`}
+                                </span>
+                            </div>
+
+                            <div className="divider my-2"></div>
+
+                            <div className="flex justify-between">
+                                <span>Total</span>
+                                <span className="font-bold">
+                                    ৳ {finalTotal}
+                                </span>
+                            </div>
+
+                            <Link href="/checkout" className="btn btn-primary mt-6">
+                                Checkout
+                            </Link>
                         </div>
-                    ))}
-                </div>
-
-                <div className="card bg-base-100 shadow h-fit">
-                    <div className="card-body">
-                        <h2 className="card-title">
-                            Order Summary
-                        </h2>
-
-                        <div className="flex justify-between mt-4">
-                            <span>Subtotal</span>
-                            <span className="font-bold">
-                                ৳ {cart.total}
-                            </span>
-                        </div>
-
-                        <div className="flex justify-between mt-2">
-                            <span>Shipping</span>
-                            <span className="font-bold">
-                                {shippingFee === 0 ? "Free" : `৳ ${shippingFee}`}
-                            </span>
-                        </div>
-
-                        <div className="divider my-2"></div>
-
-                        <div className="flex justify-between">
-                            <span>Total</span>
-                            <span className="font-bold">
-                                ৳ {finalTotal}
-                            </span>
-                        </div>
-
-                        <Link href="/checkout" className="btn btn-primary mt-6">
-                            Checkout
-                        </Link>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </ProtectedRoute>
     );
 }

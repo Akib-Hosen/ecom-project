@@ -127,7 +127,7 @@ export default function ProductDetailsPage() {
                         </button>
 
                         <Link 
-                            href="" 
+                            href="/checkout" 
                             className="flex-1 flex items-center justify-center border-2 border-[#0047FF] text-[#0047FF] font-bold py-4 rounded-xl hover:bg-blue-50 transition"
                         >
                             Buy Now

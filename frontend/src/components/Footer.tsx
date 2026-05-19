@@ -1,15 +1,25 @@
+"use client";
+import { usePathname } from "next/navigation";
+
+
 export default function Footer() {
+    const pathname = usePathname();
+    
+    if (pathname.startsWith("/seller")) {
+        return null;
+    }
+
     return (
         <footer className="bg-[#0A1930] text-white mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 pb-8">
-                    
+
                     <div className="col-span-1 md:col-span-1">
-                        <img 
-                            src="/logo.png" 
-                            alt="bdMart" 
-                            className="h-16 w-auto object-contain mb-6" 
+                        <img
+                            src="/logo.png"
+                            alt="bdMart"
+                            className="h-16 w-auto object-contain mb-6"
                         />
                         <p className="text-gray-400 text-sm leading-relaxed">
                             Your ultimate shopping destination for quality products, seamless ordering, and reliable delivery.
@@ -58,7 +68,7 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className="pt-8 text-center md:text-left flex flex-col md:flex-row justify-center items-center text-sm text-gray-500">
                     <p>© {new Date().getFullYear()} bdMart. All rights reserved.</p>

@@ -36,8 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const savedToken = localStorage.getItem("token");
 
         if (savedUser && savedToken) {
-        setUser(JSON.parse(savedUser));
-        setToken(savedToken);
+            setUser(JSON.parse(savedUser));
+            setToken(savedToken);
         }
 
         setLoading(false);
@@ -45,11 +45,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (email: string, password: string) => {
         const response = await api.post("/auth/login", {
-        email,
-        password,
+            email,
+            password,
         });
 
-        const accessToken = response.data.accessToken;
+        const accessToken =
+            response.data.accessToken || response.data.access_token;
+
         const loggedUser = response.data.user;
 
         localStorage.setItem("token", accessToken);
@@ -59,9 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(loggedUser);
 
         if (loggedUser.role === "seller") {
-        router.push("/seller/dashboard");
+            router.push("/seller/dashboard");
         } else {
-        router.push("/products");
+            router.push("/");
         }
     };
 
@@ -76,7 +78,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{user, token, isAuthenticated, loading, login, logout,}}>
+        <AuthContext.Provider
+            value={{
+                user,
+                token,
+                isAuthenticated,
+                loading,
+                login,
+                logout,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

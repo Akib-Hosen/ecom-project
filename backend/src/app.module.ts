@@ -8,6 +8,7 @@ import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ProductsModule,
     CartModule,
     OrdersModule,
+    CategoriesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -29,6 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

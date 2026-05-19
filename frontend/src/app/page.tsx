@@ -11,15 +11,11 @@ export default function HomePage() {
   useEffect(() => {
     const getHomeData = async () => {
       try {
-        const response = await api.get("/products");
+        const categoryResponse = await api.get("/categories");
+        setCategories(categoryResponse.data || []);
 
-        const products = response.data.data || [];
-
-        const uniqueCategories: string[] = Array.from(
-          new Set(products.map((product: any) => product.category))
-        );
-
-        setCategories(uniqueCategories);
+        const productResponse = await api.get("/products");
+        const products = productResponse.data.data || [];
 
         setFeaturedProducts(products.slice(0, 4));
       } catch (error) {
@@ -41,8 +37,8 @@ export default function HomePage() {
             A simple e-commerce website where customers can browse products,
             add items to cart, place orders, and track order status.
           </p>
-          <Link 
-            href="/products" 
+          <Link
+            href="/products"
             className="inline-block bg-[#0047FF] text-white font-bold py-4 px-10 rounded-xl hover:bg-blue-700 transition shadow-[0_4px_14px_0_rgba(0,71,255,0.39)] hover:shadow-[0_6px_20px_rgba(0,71,255,0.23)]"
           >
             Shop Now
@@ -54,20 +50,23 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-center text-black mb-10">
           Featured Categories
         </h2>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {categories.map((category) => (
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {categories.map((category: any) => (
             <Link
-              href={`/products?category=${category}`}
-              key={category}
-              className="group bg-white rounded-2xl border border-gray-100 p-8 text-center shadow-lg hover:border-[#0047FF] hover:shadow-2xl transition-all duration-300"
+              href={`/products?category=${category.name}`}
+              key={category.id}
+              className="card bg-base-100 shadow hover:shadow-lg transition duration-300"
             >
-              <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#0047FF] transition-colors mb-2 capitalize">
-                {category}
-              </h3>
-              <p className="text-sm text-gray-500">
-                Explore {category} products
-              </p>
+              <div className="card-body items-center text-center">
+                <h3 className="card-title">
+                  {category.name}
+                </h3>
+
+                <p>
+                  Explore {category.name} products
+                </p>
+              </div>
             </Link>
           ))}
         </div>
@@ -95,7 +94,7 @@ export default function HomePage() {
                 <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">
                   {product.pname}
                 </h3>
-                
+
                 <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">
                   {product.description}
                 </p>
