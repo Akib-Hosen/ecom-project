@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Link from "next/link";
 
 export default function SellerUsersPage() {
     const [users, setUsers] = useState<any[]>([]);
@@ -89,9 +90,14 @@ export default function SellerUsersPage() {
     return (
         <ProtectedRoute allowedRole="seller">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
-                    Manage Users
-                </h1>
+                <div className="flex items-center gap-4 mb-8">
+                    <Link href="/seller/dashboard" className="flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-600 rounded-full hover:bg-[#0047FF] hover:text-white transition-colors" title="Back to Dashboard">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </Link>
+                    <h1 className="text-3xl font-extrabold text-gray-900">
+                        Manage Users
+                    </h1>
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Link from "next/link";
 
 export default function SellerOrdersPage() {
     const [orders, setOrders] = useState<any[]>([]);
@@ -73,9 +74,14 @@ export default function SellerOrdersPage() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 border-b border-gray-200 pb-6">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
-                            Manage Orders
-                        </h1>
+                        <div className="flex items-center gap-4 mb-2">
+                            <Link href="/seller/dashboard" className="flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-600 rounded-full hover:bg-[#0047FF] hover:text-white transition-colors" title="Back to Dashboard">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            </Link>
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+                                Manage Orders
+                            </h1>
+                        </div>
                         <p className="text-gray-500">
                             View and update customer orders
                         </p>

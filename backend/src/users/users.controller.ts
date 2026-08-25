@@ -18,6 +18,22 @@ export class UsersController {
         return this.usersService.findAll(user);
     }
 
+    @Patch('profile')
+    updateProfile(
+        @CurrentUser() user: User,
+        @Body() updateProfileDto: UpdateProfileDto,
+    ) {
+        return this.usersService.updateProfile(user.id, updateProfileDto);
+    }
+
+    @Patch('change-password')
+    changePassword(
+        @CurrentUser() user: User,
+        @Body() changePasswordDto: ChangePasswordDto,
+    ) {
+        return this.usersService.changePassword(user.id, changePasswordDto);
+    }
+
     @Patch(':id')
     updateUser(
         @CurrentUser() user: User,
@@ -33,21 +49,5 @@ export class UsersController {
         @Param('id') id: string,
     ) {
         return this.usersService.deleteUser(user, Number(id));
-    }
-
-    @Patch('profile')
-    updateProfile(
-        @CurrentUser() user: User,
-        @Body() updateProfileDto: UpdateProfileDto,
-    ) {
-        return this.usersService.updateProfile(user.id, updateProfileDto);
-    }
-
-    @Patch('change-password')
-    changePassword(
-        @CurrentUser() user: User,
-        @Body() changePasswordDto: ChangePasswordDto,
-    ) {
-        return this.usersService.changePassword(user.id, changePasswordDto);
     }
 }

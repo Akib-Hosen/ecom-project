@@ -62,6 +62,9 @@ export class UsersService {
         }
 
         const users = await this.userRepository.find({
+            where: {
+                isActive: true,
+            },
             order: {
                 createdAt: 'DESC',
             },
@@ -129,7 +132,8 @@ export class UsersService {
             throw new NotFoundException('User not found');
         }
 
-        await this.userRepository.remove(user);
+        user.isActive = false;
+        await this.userRepository.save(user);
 
         return {
             message: 'User deleted successfully',
